@@ -2,6 +2,7 @@ import { Telegraf } from "telegraf";
 import { message } from "telegraf/filters"
 import dotenv from "dotenv";
 import {ogg} from "./ogg.js"
+import { speechtotext } from "./speech2text.js";
 
 dotenv.config();
 
@@ -14,7 +15,9 @@ bot.on(message('voice'), async (ctx) => {
         const oggPath = await ogg.create(link.href, userId);
         const mp3Path = await ogg.toMp3(oggPath, userId);
 
-        await ctx.reply(mp3Path);
+        const text = await speechtotext.transcription(mp3Path);
+
+        await ctx.reply(text);
         
     }catch(e){
         console.log("Error with voice",e.message);

@@ -3,6 +3,7 @@ import { message } from "telegraf/filters"
 import dotenv from "dotenv";
 import {ogg} from "./ogg.js"
 import { speechtotext } from "./speech2text.js";
+import {gemini} from "./gemini.js";
 
 dotenv.config();
 
@@ -23,6 +24,19 @@ bot.on(message('voice'), async (ctx) => {
         console.log("Error with voice",e.message);
     }
     
+});
+
+bot.on('text', async (ctx) => {
+    try{
+        const text = ctx.message.text;
+        const embedding = await gemini.emdedding(text);
+        console.log(embedding);
+        await ctx.reply("embedding is works bro");
+    }catch(e){
+        console.log("Error with embedding in main",e.message);
+    }
+
+
 });
 
 bot.command('start', async (ctx) => {
